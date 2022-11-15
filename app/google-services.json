@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1018081186988",
+    "project_id": "geoloccapstone",
+    "storage_bucket": "geoloccapstone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018081186988:android:0624dccfa7edc473dbbb09",
+        "android_client_info": {
+          "package_name": "com.example.geoloccapstone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018081186988-ptopkrk0kb6u9hj7l1tndr9mfpeegbgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbXJoeMuTQmzMIORIirp_yj2q5au0Zb1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018081186988-ptopkrk0kb6u9hj7l1tndr9mfpeegbgq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

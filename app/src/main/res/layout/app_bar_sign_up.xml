@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="23dp">
+
+        <ImageButton
+            android:id="@+id/imgBack"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:background="@drawable/back_button"/>
+
+        <TextView
+            android:id="@+id/txtLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/mazzardh_bold"
+            android:text="Sign up"
+            android:textAlignment="center"
+            android:textColor="#222563"
+            android:textSize="35dp" />
+
+    </RelativeLayout>
+
+</Toolbar>

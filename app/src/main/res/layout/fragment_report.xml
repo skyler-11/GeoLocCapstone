@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/android_default_blue"
+    tools:context=".ReportFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/pTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="40sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/rounded_edittext_main"
+            android:elevation="10dp"
+            android:hint="Enter Event Title"
+            android:minHeight="80dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="#222563"
+            android:textColorHint="#607185" />
+
+        <TextView
+            android:id="@+id/empID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/rounded_edittext_main"
+            android:elevation="10dp"
+            android:hint="SSU ID"
+            android:minHeight="80dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="#222563"
+            android:textColorHint="#607185" />
+
+
+        <TextView
+            android:id="@+id/empName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/rounded_edittext_main"
+            android:editable="false"
+            android:elevation="10dp"
+            android:hint="Enter Employee's Lastname"
+            android:minHeight="80dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="#222563"
+            android:textColorHint="#607185" />
+
+        <EditText
+            android:id="@+id/curLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/rounded_edittext_main"
+            android:editable="false"
+            android:elevation="10dp"
+            android:hint="Enter Coordinates"
+            android:minHeight="80dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="#222563"
+            android:textColorHint="#607185" />
+
+
+        <EditText
+            android:id="@+id/pDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/rounded_edittext_main"
+            android:elevation="10dp"
+            android:gravity="start"
+            android:hint="Enter Event Description"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minHeight="260dp"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="#222563"
+            android:textColorHint="#607185" />
+
+        <Button
+            android:id="@+id/pUpload"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mazzardh_bold"
+            android:background="@drawable/rounded_button_main"
+            android:layout_gravity="end"
+            android:layout_marginTop="20sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="20sp"
+            android:text="Submit"
+            android:textAlignment="center"
+            android:textSize="18dp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"/>
+    </LinearLayout>
+
+</ScrollView>
