@@ -22,12 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,9 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     //private DatabaseReference mDatabase;
 
     private ProgressDialog mProgress;
-    private FirebaseFirestore db;
     private TextView fpass;
-    String ssuID;
 
 //    //Shared-Pref
 //    Intent in;
@@ -118,8 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         fpass = findViewById(R.id.fpassw);
 
         mAuth = FirebaseAuth.getInstance();
-
-        db = FirebaseFirestore.getInstance();
         mProgress = new ProgressDialog(this);
 
 //        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -153,25 +143,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Please verify your account through your email!", Toast.LENGTH_SHORT).show();
                     }
 
-                    String dtrI = UUID.randomUUID().toString();
-
-                    Map<String, Object> dtr = new HashMap<>();
-                    dtr.put("dtrID", dtrI);
-                    dtr.put("dtrLogin", FieldValue.serverTimestamp());
-                    dtr.put("email", email);
-
-                    db.collection("timeRecord").document(mAuth.getUid()).set(dtr)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(LoginActivity.this, "Log-in Recorded",Toast.LENGTH_LONG).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
                     mProgress.dismiss();
                     Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -58,10 +58,13 @@ public class ReportFragment extends Fragment {
     DatabaseReference databaseReference;
 
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
+
 
 
         //Edit Text
@@ -169,7 +172,7 @@ public class ReportFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         pd.dismiss();
                         Toast.makeText(getActivity(),"Report Sent", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getContext(), MainActivity.class));
+                        startActivity(new Intent(getContext(), MapsFragment.class));
                         getActivity().finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {

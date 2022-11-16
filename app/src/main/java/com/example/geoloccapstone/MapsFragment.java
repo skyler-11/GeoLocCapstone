@@ -1,5 +1,6 @@
 package com.example.geoloccapstone;
 
+
 import static android.os.Build.VERSION_CODES.M;
 
 import android.Manifest;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MapsFragment extends Fragment implements GeoQueryEventListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQueryEventListener {
 
     private List<LatLng> checkPoints;
     private GoogleMap mMap;
@@ -66,8 +67,8 @@ public class MapsFragment extends Fragment implements GeoQueryEventListener {
     private FirebaseUser currentUsr;
 
     public MapsFragment() {
-    }
 
+    }
 
     @Nullable
     @Override
@@ -75,52 +76,12 @@ public class MapsFragment extends Fragment implements GeoQueryEventListener {
 
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.Map);
 
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap googleMap) {
-
-                mAuth = FirebaseAuth.getInstance();
-                mMap = googleMap;
-                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-                initArea();
-                settingGeoFire();
-                buildLocationRequest();
-                buildLocationCallback();
-
-                if (mAuth != null) {
-                    currentUsr = mAuth.getCurrentUser();
-                }
-
-                mMap.getUiSettings().setZoomControlsEnabled(true);
-
-                if (fusedLocationProviderClient != null){
-                    if (Build.VERSION.SDK_INT >= M) {
-                        if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            return;
-                        }
-                    }
-                }
-                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-
-                for(LatLng latLng : checkPoints)
-                {
-                    mMap.addCircle(new CircleOptions().center(latLng)
-                            .radius(15)
-                            .strokeColor(Color.BLUE)
-                            .fillColor(0x220000FF)
-                            .strokeWidth(5.0f));
-
-                    GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.015f);
-                    geoQuery.addGeoQueryEventListener(MapsFragment.this);
-                }
-            }
-        });
+        supportMapFragment.getMapAsync(MapsFragment.this);
         return view;
     }
 
@@ -187,6 +148,10 @@ public class MapsFragment extends Fragment implements GeoQueryEventListener {
         checkPoints.add(new LatLng(14.189505,121.163846));
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
@@ -243,4 +208,45 @@ public class MapsFragment extends Fragment implements GeoQueryEventListener {
         Notification notification = builder.build();
         notificationManager.notify(new Random().nextInt(), notification);
     }
-    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mAuth = FirebaseAuth.getInstance();
+        mMap = googleMap;
+
+
+        initArea();
+        settingGeoFire();
+        buildLocationRequest();
+        buildLocationCallback();
+
+        if (mAuth != null) {
+            currentUsr = mAuth.getCurrentUser();
+        }
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        if (fusedLocationProviderClient != null){
+            if (Build.VERSION.SDK_INT >= M) {
+                if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+            }
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+
+        for(LatLng latLng : checkPoints)
+        {
+            mMap.addCircle(new CircleOptions().center(latLng)
+                    .radius(15)
+                    .strokeColor(Color.BLUE)
+                    .fillColor(0x220000FF)
+                    .strokeWidth(5.0f));
+
+            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.015f);
+            geoQuery.addGeoQueryEventListener(MapsFragment.this);
+        }
+}
+}
+
