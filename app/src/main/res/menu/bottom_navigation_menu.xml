@@ -7,7 +7,8 @@
         android:id="@+id/nav_map"
         android:icon="@drawable/ic_add"
         android:fontFamily="@font/mazzardh_bold"
-        android:title="Map" />
+        android:title="Map"
+        />
 
     <item
         android:id="@+id/nav_report"

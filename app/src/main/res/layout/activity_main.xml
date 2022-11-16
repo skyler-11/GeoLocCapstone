@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/android_default_blue"
+    android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
 <!--    <Button-->
@@ -33,7 +33,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:backgroundTint="#eed414"
+        android:layout_marginBottom="0dp"
+        app:backgroundTint="#214a80"
         app:elevation="5dp"
         app:menu="@menu/bottom_navigation_menu" />
 

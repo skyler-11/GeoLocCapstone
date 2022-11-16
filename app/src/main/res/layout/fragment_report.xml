@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/android_default_blue"
+    android:background="@color/colorWhite"
     tools:context=".ReportFragment">
 
     <LinearLayout
@@ -15,7 +15,7 @@
         <EditText
             android:id="@+id/pTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="68dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="40sp"
             android:layout_marginRight="20sp"
@@ -32,7 +32,7 @@
         <TextView
             android:id="@+id/empID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="5sp"
             android:layout_marginRight="20sp"
@@ -50,7 +50,7 @@
         <TextView
             android:id="@+id/empName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="41dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="5sp"
             android:layout_marginRight="20sp"
@@ -68,7 +68,7 @@
         <EditText
             android:id="@+id/curLoc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="37dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="5sp"
             android:layout_marginRight="20sp"
@@ -87,7 +87,7 @@
         <EditText
             android:id="@+id/pDesc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="313dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="5sp"
             android:layout_marginRight="20sp"

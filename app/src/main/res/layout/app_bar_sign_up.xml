@@ -14,7 +14,7 @@
             android:layout_marginLeft="5dp"
             android:layout_width="30dp"
             android:layout_height="35dp"
-            android:background="@drawable/back_button"/>
+            android:background="@drawable/ic_baseline_arrow_back_ios_24"/>
 
         <TextView
             android:id="@+id/txtLabel"

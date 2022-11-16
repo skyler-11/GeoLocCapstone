@@ -4,18 +4,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/android_background"
+    android:background="#1e2833"
     tools:context=".LandingActivity"
     >
 
+
+    <ImageView
+        android:layout_width="380dp"
+        android:layout_height="380dp"
+        android:layout_gravity="center"
+        android:paddingTop="60dp"
+        android:src="@drawable/logo_letran" />
+
     <TextView
-        android:id="@+id/textView1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text=" "
-        android:layout_weight="0"
-        />
+        android:layout_width="235dp"
+        android:layout_height="61dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/mazzardh_bold"
+        android:paddingLeft="20dp"
+        android:text="SSU Patrol"
+        android:textColor="@color/colorWhite"
+        android:textSize="40dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +33,7 @@
         android:layout_weight="1"
         android:gravity="center|bottom"
         android:orientation="vertical"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="100dp">
 
         <Button
             android:id="@+id/signin"
@@ -34,7 +44,8 @@
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
             android:layout_marginBottom="5sp"
-            android:text="Sign In"
+            android:text="Login"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:textAllCaps="false"/>
 
@@ -49,7 +60,7 @@
             android:layout_marginBottom="5sp"
             android:background="@drawable/rounded_button_variant"
             android:textAllCaps="false"
-            android:text="Bago Dito? Sign up!"
+            android:text="Signup"
             android:textSize="18dp"
             android:textColor="#222563" />
 

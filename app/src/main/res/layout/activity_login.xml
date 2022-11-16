@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/android_default_with_bottom"
+    android:background="#1e2833"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LoginActivity">
 
@@ -14,13 +14,16 @@
         android:orientation="vertical"
         android:gravity="center|top">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="450px"
-            android:layout_gravity="center"
+        <TextView
+            android:layout_width="302dp"
+            android:layout_height="229dp"
+            android:layout_gravity="left"
             android:layout_marginTop="35dp"
-            android:layout_marginRight="2sp"
-            android:src="@drawable/logo_welcome" />
+            android:fontFamily="@font/mazzardh_bold"
+            android:paddingLeft="20dp"
+            android:text="Security Service Unit"
+            android:textColor="@color/colorWhite"
+            android:textSize="70dp" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -62,7 +65,7 @@
             android:layout_marginBottom="5sp"
             android:layout_marginRight="10sp"
             android:text="Forgot password?"
-            android:textColor="#222563"
+            android:textColor="@color/colorWhite"
             android:textAlignment="textEnd"/>
 
         <Button
@@ -76,26 +79,10 @@
             android:layout_marginRight="20sp"
             android:layout_marginBottom="20sp"
             android:text="Login"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:textAllCaps="false"/>
 
-        <ImageButton
-            android:id="@+id/buttonFBLogin"
-            android:elevation="10dp"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_width="260dip"
-            android:layout_height="39dip"
-            android:background="@drawable/login_facebook" />
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_width="270dip"
-            android:layout_height="43dip" />
     </LinearLayout>
 
 </LinearLayout>
