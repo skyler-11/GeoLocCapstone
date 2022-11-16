@@ -1,6 +1,5 @@
 package com.example.geoloccapstone;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;

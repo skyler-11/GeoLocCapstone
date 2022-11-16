@@ -172,7 +172,7 @@ public class ReportFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         pd.dismiss();
                         Toast.makeText(getActivity(),"Report Sent", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getContext(), MapsFragment.class));
+                        startActivity(new Intent(getActivity(), MainActivity.class));
                         getActivity().finish();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
