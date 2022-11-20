@@ -1,5 +1,6 @@
 package com.example.geoloccapstone;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,28 +55,46 @@ public class DtrFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-
-                Map<String, Object> dtr = new HashMap<>();
-
-                dtr.put("dtrLogin", FieldValue.serverTimestamp());
-                dtr.put("email", email);
-                dtr.put("ssuID", ssuID);
-                dtr.put("firstName", firName);
-                dtr.put("middleName", midName);
-                dtr.put("lastName", lasName);
-
-                db.collection("timeRecord").document(dtrI).set(dtr)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(true);
+                builder.setTitle("Record Time-In");
+                builder.setMessage("Do you want to Record your Time-in?");
+                builder.setPositiveButton("Confirm",
+                        new DialogInterface.OnClickListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "Time-in Recorded", Toast.LENGTH_LONG).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, Object> dtr = new HashMap<>();
+
+                                dtr.put("dtrLogin", FieldValue.serverTimestamp());
+                                dtr.put("email", email);
+                                dtr.put("ssuID", ssuID);
+                                dtr.put("firstName", firName);
+                                dtr.put("middleName", midName);
+                                dtr.put("lastName", lasName);
+
+                                db.collection("timeRecord").document(dtrI).set(dtr)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(getActivity(), "Time-in Recorded", Toast.LENGTH_LONG).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -82,30 +102,66 @@ public class DtrFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Map<String, Object> logout = new HashMap<>();
-                logout.put("dtrLogout", FieldValue.serverTimestamp());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(true);
+                builder.setTitle("Record Time-out");
+                builder.setMessage("Do you want to Record your Time-out?");
+                builder.setPositiveButton("Confirm",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, Object> logout = new HashMap<>();
+                                logout.put("dtrLogout", FieldValue.serverTimestamp());
 
-                db.collection("timeRecord").document(dtrI).set(logout, SetOptions.merge())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "Time-out Recorded",Toast.LENGTH_LONG).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                db.collection("timeRecord").document(dtrI).set(logout, SetOptions.merge())
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(getActivity(), "Time-out Recorded",Toast.LENGTH_LONG).show();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }
                         });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.signOut();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-                getActivity().finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(true);
+                builder.setTitle("Log-out");
+                builder.setMessage("Confirm Log-out?");
+                builder.setPositiveButton("Confirm",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAuth.signOut();
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                            }
+                        });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
