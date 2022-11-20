@@ -47,13 +47,13 @@ public class ReportFragment extends Fragment {
     TextView emID, empfName, curLoc;
     Button Upload;
     String userID;
-    String eID, firName, lasName, midName,namEx;
+    String eID, firName, lasName, midName;
 
     ProgressDialog pd;
 
-    FirebaseUser currentUser;
     FirebaseFirestore db;
     FirebaseAuth mAuth;
+    FirebaseUser currUser;
 
     DatabaseReference databaseReference;
 
@@ -82,7 +82,9 @@ public class ReportFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         //Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        userID = mAuth.getCurrentUser().getUid();
+
+        currUser = FirebaseAuth.getInstance().getCurrentUser();
+        userID = currUser.getUid();
 
 
 
@@ -106,15 +108,15 @@ public class ReportFragment extends Fragment {
     }
 
     private void realtimeQuery() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Geo Fencing - Letran").child("Logs");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Geo Fencing - Letran").child(mAuth.getCurrentUser().getUid());
+         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                 for (DataSnapshot snapshot: datasnapshot.getChildren()){
                     DataSnapshot latSnap = snapshot.child("l");
-                        double lat = latSnap.child("0").getValue(Double .class);
-                        double lng = latSnap.child("1").getValue(Double.class);
-                        curLoc.setText(lat + ", " + lng);
+                    Double lat = latSnap.child("0").getValue(Double .class);
+                    Double lng = latSnap.child("1").getValue(Double.class);
+                    curLoc.setText(lat + ", " + lng);
                 }
             }
             @Override
@@ -125,7 +127,6 @@ public class ReportFragment extends Fragment {
     }
 
     private void queryData() {
-
         db.collection("appVerify")
                 .document(mAuth.getCurrentUser().getUid())
                 .get()
@@ -135,13 +136,13 @@ public class ReportFragment extends Fragment {
                      firName = task.getResult().getString("firstName");
                      midName = task.getResult().getString("middleName");
                      lasName = task.getResult().getString("lastName");
-                     namEx = task.getResult().getString("nameEx");
 
-                     empfName.setText(lasName + ", " + firName + " " + midName + " " + namEx);
+
+                     empfName.setText(lasName + ", " + firName + " " + midName);
                      emID.setText(eID);
 
                 }else {
-                     Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();;
+                     Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
                  }
                  });
     }
@@ -174,6 +175,20 @@ public class ReportFragment extends Fragment {
                         Toast.makeText(getActivity(),"Report Sent", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getActivity(), MainActivity.class));
                         getActivity().finish();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(getActivity(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        db.collection("reportsArchive").document(reportID).set(reports)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        pd.dismiss();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -1,5 +1,6 @@
 package com.example.geoloccapstone;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,11 +26,10 @@ import java.util.UUID;
 
 public class DtrFragment extends Fragment {
 
-    private Button timeIn, timeOut;
+    private Button timeIn, timeOut, logout;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    ActionBar actionBar;
-    String ssuID, email;
+    String ssuID, firName, lasName, midName, email;
 
     public DtrFragment(){
 
@@ -41,8 +40,11 @@ public class DtrFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dtr, container, false);
 
+        String dtrI = UUID.randomUUID().toString();
+
         timeIn = view.findViewById(R.id.timeIn);
         timeOut = view.findViewById(R.id.timeOut);
+        logout = view.findViewById(R.id.logOut);
         initComp();
         query();
 
@@ -50,19 +52,22 @@ public class DtrFragment extends Fragment {
         timeIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dtrI = UUID.randomUUID().toString();
+
 
                 Map<String, Object> dtr = new HashMap<>();
-                dtr.put("dtrID", dtrI);
+
                 dtr.put("dtrLogin", FieldValue.serverTimestamp());
                 dtr.put("email", email);
                 dtr.put("ssuID", ssuID);
+                dtr.put("firstName", firName);
+                dtr.put("middleName", midName);
+                dtr.put("lastName", lasName);
 
-                db.collection("timeRecord").document(mAuth.getUid()).set(dtr)
+                db.collection("timeRecord").document(dtrI).set(dtr)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "Log-in Recorded", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Time-in Recorded", Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -76,14 +81,15 @@ public class DtrFragment extends Fragment {
         timeOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Map<String, Object> logout = new HashMap<>();
                 logout.put("dtrLogout", FieldValue.serverTimestamp());
 
-                db.collection("timeRecord").document(mAuth.getUid()).set(logout, SetOptions.merge())
+                db.collection("timeRecord").document(dtrI).set(logout, SetOptions.merge())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "Log-out Recorded",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Time-out Recorded",Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -94,13 +100,21 @@ public class DtrFragment extends Fragment {
             }
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                getActivity().finish();
+            }
+        });
+
         return view;
     }
 
     private void initComp() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-
 
     }
 
@@ -110,8 +124,12 @@ public class DtrFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful() && task.getResult() != null){
-                        email = task.getResult().getString("email");
                         ssuID = task.getResult().getString("ssuID");
+                        firName = task.getResult().getString("firstName");
+                        lasName = task.getResult().getString("lastName");
+                        midName =  task.getResult().getString("middleName");
+                        email = task.getResult().getString("email");
+
 
                     }else {
                         Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();;

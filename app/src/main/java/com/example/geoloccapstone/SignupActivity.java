@@ -34,7 +34,6 @@ public class SignupActivity extends AppCompatActivity {
     private EditText editFirstname;
     private EditText editMiddlename;
     private EditText editLastname;
-    private EditText suffix;
     private EditText editID;
     private EditText editEmail;
     private EditText editPassword;
@@ -80,7 +79,6 @@ public class SignupActivity extends AppCompatActivity {
         editFirstname =  findViewById(R.id.Firstname);
         editMiddlename = findViewById(R.id.Middlename);
         editLastname =  findViewById(R.id.Lastname);
-        suffix = findViewById(R.id.Namesuff);
         editID =  findViewById(R.id.idNum);
         editEmail =  findViewById(R.id.Email);
         editPassword =  findViewById(R.id.Password);
@@ -102,7 +100,6 @@ public class SignupActivity extends AppCompatActivity {
         String firstname = editFirstname.getText().toString().trim();
         String middleName = editMiddlename.getText().toString().trim();
         String lastname = editLastname.getText().toString().trim();
-        String nameSuf = suffix.getText().toString().trim();
         String id = editID.getText().toString().trim();
         String email = editEmail.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
@@ -124,11 +121,6 @@ public class SignupActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(lastname)) {
             editLastname.setError("Required field!");
-            mProgress.dismiss();
-            return;
-        }
-        if (TextUtils.isEmpty(nameSuf)) {
-            suffix.setError("Required field, Type N/A if not Applicable!");
             mProgress.dismiss();
             return;
         }
@@ -195,7 +187,6 @@ public class SignupActivity extends AppCompatActivity {
                 user.put("lastName", lastname);
                 user.put("middleName", middleName);
                 user.put("firstName", firstname);
-                user.put("nameEx", nameSuf);
                 user.put("ssuID", id);
                 user.put("email", email);
 

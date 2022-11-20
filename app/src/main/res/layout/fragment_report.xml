@@ -58,7 +58,7 @@
             android:background="@drawable/rounded_edittext_main"
             android:editable="false"
             android:elevation="10dp"
-            android:hint="Enter Employee's Lastname"
+            android:hint="Enter Employee's Name"
             android:minHeight="80dp"
             android:padding="10dp"
             android:singleLine="true"
@@ -68,7 +68,7 @@
         <EditText
             android:id="@+id/curLoc"
             android:layout_width="match_parent"
-            android:layout_height="37dp"
+            android:layout_height="41dp"
             android:layout_marginLeft="20sp"
             android:layout_marginTop="5sp"
             android:layout_marginRight="20sp"

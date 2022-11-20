@@ -1,8 +1,6 @@
 package com.example.geoloccapstone;
 
 
-import static android.os.Build.VERSION_CODES.M;
-
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,7 +9,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -43,17 +40,23 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQueryEventListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,GeoQueryEventListener {
 
     private List<LatLng> checkPoints;
     private GoogleMap mMap;
@@ -61,14 +64,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
     private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Marker currentUser;
+    private GeoQuery geoQuery;
     private GeoFire geoFire;
     private FirebaseAuth mAuth;
     private DatabaseReference myLocationRef;
-    private FirebaseUser currentUsr;
+    private String currentUsr;
+    private FirebaseFirestore db;
+    private String ssuID, firstName, middleName, lastName;
+    Notification notification;
 
     public MapsFragment() {
 
     }
+
+
 
     @Nullable
     @Override
@@ -76,13 +85,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
 
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
+        mAuth = FirebaseAuth.getInstance();
+        currentUsr = mAuth.getCurrentUser().getUid();
+
+        dataQuery();
+        initArea();
+        settingGeoFire();
+        buildLocationRequest();
+        buildLocationCallback();
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         SupportMapFragment supportMapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.Map);
 
         supportMapFragment.getMapAsync(MapsFragment.this);
+
         return view;
+    }
+
+
+    private void dataQuery() {
+        db = FirebaseFirestore.getInstance();
+        db.collection("appVerify")
+                .document(currentUsr)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful() && task.getResult() != null){
+                        ssuID = task.getResult().getString("ssuID");
+                        firstName = task.getResult().getString("firstName");
+                        middleName = task.getResult().getString("middleName");
+                        lastName = task.getResult().getString("lastName");
+
+                    }else {
+                        Toast.makeText(getActivity(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void buildLocationCallback() {
@@ -91,7 +129,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
             public void onLocationResult(final LocationResult locationResult) {
                 if (mMap != null) {
                     //instance of an object
-                    geoFire.setLocation(currentUsr.getUid(), new GeoLocation(locationResult.getLastLocation().getLatitude(),
+                    geoFire.setLocation(ssuID, new GeoLocation(locationResult.getLastLocation().getLatitude(),
                             locationResult.getLastLocation().getLongitude()), new GeoFire.CompletionListener() {
                         @Override
                         public void onComplete(String key, DatabaseError error) {
@@ -126,7 +164,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
 
     private void settingGeoFire() {
 
-        myLocationRef = FirebaseDatabase.getInstance().getReference("Geo Fencing - Letran").child("Logs");
+        myLocationRef = FirebaseDatabase.getInstance().getReference("Geo Fencing - Letran").child(currentUsr);
         geoFire = new GeoFire(myLocationRef);
     }
 
@@ -154,86 +192,90 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
     }
 
     @Override
-    public void onKeyEntered(String key, GeoLocation location) {
-        sendNotif("GeoLocApp", String.format("%s Entered a Checkpoint",key));
+    public void onStop() {
+        fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+        super.onStop();
     }
-
-
+    @Override
+    public void onKeyEntered(String key, GeoLocation location) {
+        sendNotif(String.format("%s Entered a Patrol Area",key));
+    }
     @Override
     public void onKeyExited(String key) {
-        sendNotif("GeoLocApp", String.format("%s Exited a Checkpoint",key));
+        sendNotif(String.format("%s Exited a Patrol Area",key));
     }
-
     @Override
     public void onKeyMoved(String key, GeoLocation location) {
-        sendNotif("GeoLocApp", String.format("%s Moved within a Checkpoint",key));
+        sendNotif(String.format("%s Moved within a Patrol Area",key));
     }
-
     @Override
     public void onGeoQueryReady() {
 
     }
-
     @Override
     public void onGeoQueryError(DatabaseError error) {
         Toast.makeText(getContext(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    private void sendNotif(String title, String content) {
-
-        Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
+    private void sendNotif(String content) {
 
         String NOTIFICATION_CHANNEL_ID = "GeoLocApp";
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification",
+                NotificationManager.IMPORTANCE_DEFAULT);
 
-            notificationChannel.setDescription(("Channel Description"));
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-        }
+        notificationChannel.setDescription(("Channel Description"));
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.RED);
+        notificationChannel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+        notificationChannel.enableVibration(true);
+        notificationManager.createNotificationChannel(notificationChannel);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), NOTIFICATION_CHANNEL_ID);
-        builder.setContentTitle(title)
+        builder.setContentTitle("GeoLocApp")
                 .setContentText(content)
                 .setAutoCancel(false)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
 
-        Notification notification = builder.build();
+        notification = builder.build();
         notificationManager.notify(new Random().nextInt(), notification);
+
+        Map<String, Object> notif = new HashMap<>();
+        notif.put("locUpdate", content);
+        notif.put("timeStamp", FieldValue.serverTimestamp());
+        notif.put("firstName", firstName);
+        notif.put("middleName", middleName);
+        notif.put("lastName", lastName);
+
+        db.collection("guardLocation").document(currentUsr).set(notif)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(getActivity(), ""+content, Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(getActivity(),e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        mAuth = FirebaseAuth.getInstance();
         mMap = googleMap;
-
-
-        initArea();
-        settingGeoFire();
-        buildLocationRequest();
-        buildLocationCallback();
-
-        if (mAuth != null) {
-            currentUsr = mAuth.getCurrentUser();
-        }
 
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         if (fusedLocationProviderClient != null){
-            if (Build.VERSION.SDK_INT >= M) {
-                if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
+            if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
         }
+
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
         for(LatLng latLng : checkPoints)
@@ -244,9 +286,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, GeoQue
                     .fillColor(0x220000FF)
                     .strokeWidth(5.0f));
 
-            GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.015f);
+            geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.010f);
             geoQuery.addGeoQueryEventListener(MapsFragment.this);
         }
-}
+    }
 }
 

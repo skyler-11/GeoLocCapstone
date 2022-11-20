@@ -44,6 +44,22 @@
             android:textColor="@color/colorWhite"
             android:textSize="18dp" />
 
+        <Button
+            android:id="@+id/logOut"
+            android:backgroundTint="@color/btnRed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="100sp"
+            android:layout_marginRight="20sp"
+            android:layout_marginBottom="20sp"
+            android:background="@drawable/rounded_button_main"
+            android:fontFamily="@font/mazzardh_bold"
+            android:text="Log Out"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="18dp" />
+
 
     </LinearLayout>
 

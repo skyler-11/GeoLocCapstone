@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
         android:id="@+id/nav_dtr"
         android:icon="@drawable/ic_baseline_person_24"
         android:fontFamily="@font/mazzardh_bold"
         android:title="DTR"
         />
-
     <item
         android:id="@+id/nav_map"
         android:icon="@drawable/ic_add"
@@ -21,4 +21,5 @@
         android:fontFamily="@font/mazzardh_bold"
         android:title="Report"
         />
+
 </menu>
