@@ -65,21 +65,6 @@
             android:hint="Last Name"
             android:textColorHint="#A9AFB1" />
 
-        <EditText
-            android:id="@+id/Namesuff"
-            android:background="@drawable/rounded_edittext_main"
-            android:elevation="10dp"
-            android:inputType="text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_marginBottom="5sp"
-            android:padding="10dp"
-            android:textColor="#222563"
-            android:hint="Suffixes"
-            android:textColorHint="#A9AFB1" />
 
         <EditText
             android:id="@+id/idNum"
